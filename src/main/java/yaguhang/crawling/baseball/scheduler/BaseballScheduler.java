@@ -1,0 +1,42 @@
+package yaguhang.crawling.baseball.scheduler;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+import yaguhang.crawling.baseball.application.BaseballServiceBackup;
+
+@Component
+public class BaseballScheduler {
+
+    private static final Logger logger = LoggerFactory.getLogger(BaseballScheduler.class);
+
+    @Autowired
+    private BaseballServiceBackup baseballService;
+//    @PostConstruct
+//    public void init() {
+//
+//        try {
+//            baseballService.scrapeAllSchedule();
+//        } catch (DataIntegrityViolationException e) {
+//            // Handle unique constraint violations and other data integrity issues
+//            logger.error("Data integrity violation occurred during PostConstruct initialization", e);
+//        } catch (Exception e) {
+//            // Handle any other unexpected exceptions
+//            logger.error("An unexpected error occurred during PostConstruct initialization", e);
+//        }
+//    }
+
+    @Scheduled(cron = "0 0,30 0,13-23 * * *") // Every 30 minutes excluding 01:00-12:00
+    public void scrapeGames() {
+        System.out.println("BaseballScheduler.scrapeGames");
+        baseballService.scrapeTodayGame();
+    }
+
+    @Scheduled(cron = "0 0 0 * * *") // 매일 00시 정각에 실행
+    public void scrapeAllGames() {
+        System.out.println("BaseballScheduler.scrapeAllGames");
+        baseballService.scrapeAllSchedule();
+    }
+}
