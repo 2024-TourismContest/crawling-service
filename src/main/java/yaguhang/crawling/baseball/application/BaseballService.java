@@ -274,11 +274,9 @@ public class BaseballService {
         if (os.contains("win")) {
             System.setProperty("webdriver.chrome.driver", "drivers/chromedriver_win.exe");
         } else if (os.contains("mac")) {
-            System.setProperty("webdriver.chrome.driver", "drivers/chromedriver_mac");
-        } else if (os.contains("nux") || os.contains("nix")) {
-            System.setProperty("webdriver.chrome.driver", "drivers/chromedriver_linux");
-        } else {
-            WebDriverManager.chromedriver().setup();
+            System.setProperty("webdriver.chrome.driver", "/Users/minseok/chromedriver-mac-arm64/chromedriver");
+        } else if (os.contains("linux")) {
+            System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
         }
     }
 }
