@@ -3,17 +3,12 @@
 version: '3.8'
 
 services:
-  # 1. Blue 버전의 스프링부트 애플리케이션
   backend-blue:
-    # GitHub Actions가 빌드하고 푸시할 이미지 이름입니다.
-    # 태그는 CI/CD 과정에서 동적으로 결정됩니다.
     image: mschoi6641/crawling-service:${DOCKER_IMAGE_TAG_BLUE}
     container_name: backend-blue
     environment:
       - TZ=Asia/Seoul
-      # 이전에 알려주신 DB 정보를 사용합니다.
       - SPRING_DATASOURCE_URL=jdbc:mariadb://yaguhangdb:3306/tourismcontest?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul
-    # 외부 네트워크 'yaguhang-bridge'에 연결합니다.
     networks:
       - yaguhang-net
     restart: always
