@@ -41,7 +41,7 @@ public class BaseballService {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         List<Baseball> schedules = new ArrayList<>();
         try {
-            for (int month = 3; month <= 12; month++) {
+            for (int month = 3; month <= 10; month++) {
                 Document doc = fetchMonthlyDocument(driver, month);
                 schedules.addAll(parseMonthlySchedules(doc, month, wait));
             }

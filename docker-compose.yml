@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  baseball-crawler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: baseball-crawler:latest
+    container_name: baseball-crawler
+    environment:
+      - TZ=Asia/Seoul
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://yaguhangdb:3306/tourismcontest?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul
+#    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    networks:
+      - yaguhang-bridge
+
+networks:
+  yaguhang-bridge:
+    external: true
