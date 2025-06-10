@@ -25,8 +25,7 @@ jobs:
 
       - name: Copy application.yml from env directory
         run: |
-          cp /home/mschoi/Desktop/tourismContest/Yaguhang-RE/crawling-service/env/application.yml \
-            src/main/resources/application.yml
+          cp /home/mschoi/Desktop/tourismContest/Yaguhang-RE/crawling-service/env/application.yml ./src/main/resources/application.yml
 
       - name: Build JAR
         run: ./gradlew clean bootJar --no-daemon
