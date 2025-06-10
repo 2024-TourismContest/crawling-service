@@ -24,8 +24,6 @@ WORKDIR /app
 
 COPY build/libs/*.jar app.jar
 
-# 5) 컨테이너 내 chromedriver 경로 설정 (optional)
-#    -- 코드에서 System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver"); 로 지정했다면 필요 없음
 ENV TZ=Asia/Seoul \
     PAGE_LOAD_WAIT_MS=2000
 
