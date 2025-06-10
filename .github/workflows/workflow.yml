@@ -24,10 +24,12 @@ jobs:
       - name: Ensure gradlew has execute permission
         run: chmod +x gradlew
 
+      - name: Ensure resources folder exists
+        run: mkdir -p src/main/resources
+
       - name: Copy application.yml from env directory
-        run: |
-          cp /home/mschoi/Desktop/tourismContest/Yaguhang-RE/crawling-service/env/application.yml \
-             ./src/main/resources/application.yml
+        run: cp /home/mschoi/Desktop/tourismContest/Yaguhang-RE/crawling-service/env/application.yml \
+          src/main/resources/application.yml
 
       - name: Build with Gradle
         run: ./gradlew clean build --no-daemon
