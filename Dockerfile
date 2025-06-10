@@ -1,23 +1,17 @@
-# 1) 베이스 이미지
-FROM ubuntu:22.04
+# 1) 베이스 이미지를 Alpine Linux 기반의 OpenJDK 17로 변경
+FROM openjdk:17-jre-alpine
 
-# 2) 필수 패키지, JRE 설치
-RUN apt-get update \
- && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    openjdk-17-jre-headless \
-    ca-certificates \
+# 2) 필수 패키지 설치 (apk 사용)
+# Alpine의 패키지 매니저인 apk를 사용하고, 패키지 이름도 Alpine 용으로 변경
+RUN apk update && apk add --no-cache \
     wget \
     unzip \
     xvfb \
-    chromium-browser \
+    chromium \
     chromium-chromedriver \
-    libgtk-3-0 \
-    libx11-xcb1 \
-    libxcomposite1 \
-    libxrandr2 \
-    libasound2 \
-    libpangocairo-1.0-0 \
- && rm -rf /var/lib/apt/lists/*
+    ttf-freefont \
+    dbus \
+ && rm -rf /var/cache/apk/*
 
 # 3) 작업 디렉터리
 WORKDIR /app
