@@ -1,13 +1,19 @@
 name: Crawling-Service Blue–Green CI/CD
 
 on:
-  pull_request:
-    types: [ closed ]
+  push:
     branches: [ main ]
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: crawling-service
 
 jobs:
   build-and-push:
-    if: github.event.pull_request.merged == true
+    name: Build & Push on Self-Hosted
     runs-on: [ self-hosted, crawler ]
 
     steps:
@@ -27,8 +33,8 @@ jobs:
         run: |
           cp /home/mschoi/Desktop/tourismContest/Yaguhang-RE/crawling-service/env/application.yml ./src/main/resources/application.yml
 
-      - name: Build JAR
-        run: ./gradlew clean bootJar --no-daemon
+#      - name: Build JAR
+#        run: ./gradlew clean bootJar --no-daemon
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
