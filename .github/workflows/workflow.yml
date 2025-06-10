@@ -42,6 +42,7 @@ jobs:
           tags: |
             mschoi6641/crawling-service:latest
             mschoi6641/crawling-service:${{ github.sha }}
+          network: yaguhang-bridge
 
   # 2. 배포 작업
   deploy:
