@@ -1,7 +1,7 @@
-# 1) 베이스 이미지로 Ubuntu 22.04 사용
+# 1) 베이스 이미지
 FROM ubuntu:22.04
 
-# 2) 필수 패키지, JRE, Chromium과 Chromedriver 설치
+# 2) 필수 패키지, JRE 설치
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     openjdk-17-jre-headless \
@@ -19,16 +19,18 @@ RUN apt-get update \
     libpangocairo-1.0-0 \
  && rm -rf /var/lib/apt/lists/*
 
-# 3) 작업 디렉터리 설정
+# 3) 작업 디렉터리
 WORKDIR /app
 
+# 4) JAR 복사
 COPY build/libs/*.jar app.jar
 
+# 5) 환경변수
 ENV TZ=Asia/Seoul \
     PAGE_LOAD_WAIT_MS=2000
 
-# 6) (필요 시) 애플리케이션 포트 오픈
-EXPOSE 8080
+# 6) 애플리케이션 포트
+EXPOSE 18080
 
-# 7) 애플리케이션 실행
+# 7) 실행
 ENTRYPOINT ["java", "-jar", "app.jar"]

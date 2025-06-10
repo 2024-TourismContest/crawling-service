@@ -1,17 +1,13 @@
 version: '3.8'
-
 services:
-  crawling-service:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  crawler-blue:
     image: mschoi6641/crawling-service:latest
-    container_name: crawler
+    container_name: crawler-blue
     environment:
       - TZ=Asia/Seoul
       - SPRING_DATASOURCE_URL=jdbc:mariadb://yaguhangdb:3306/tourismcontest?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul
     expose:
-      - "18080"
+      - "108080"
     networks:
       - yaguhang-bridge
 
