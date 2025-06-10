@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     image: mschoi6641/crawling-service:latest
-    container_name: crawler
+    container_name: crawler-build
     environment:
       - TZ=Asia/Seoul
       - SPRING_DATASOURCE_URL=jdbc:mariadb://yaguhangdb:3306/tourismcontest?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul
