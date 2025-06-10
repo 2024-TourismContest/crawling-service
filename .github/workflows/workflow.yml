@@ -1,10 +1,10 @@
-name: String2024 Deploy
+name: Crawling-Service Blue–Green Deploy
 
 on:
   pull_request:
     types: [closed]
     branches:
-      - develop
+      - main
 
 permissions:
   contents: read
@@ -24,29 +24,58 @@ jobs:
       - name: Ensure gradlew has execute permission
         run: chmod +x gradlew
 
-      - name: Copy application.yml
-        run: cp /home/mschoi/Desktop/tourismContest/String-BE/application.yml ./src/main/resources/application.yml
+      - name: Copy application.yml from env directory
+        run: |
+          cp /home/mschoi/Desktop/tourismContest/Yaguhang-RE/crawling-service/env/application.yml \
+             ./src/main/resources/application.yml
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew clean build --no-daemon
 
-      - name: Copy JAR file to server
+      - name: Copy JAR to server
         run: |
-          sshpass -p "${{ secrets.SSH_PASSWORD }}" scp -P 30022 build/libs/*.jar \
-            ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:/home/mschoi/Desktop/tourismContest/String-BE/app.jar
+          sshpass -p "${{ secrets.SSH_PASSWORD }}" scp -P 30022 \
+            build/libs/*.jar \
+            ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:/home/mschoi/Desktop/tourismContest/Yaguhang-RE/crawling-service/app.jar
 
-      - name: Run deploy.sh remotely
+      - name: Run Blue–Green deploy script on server
         run: |
-          echo "Running Blue/Green deploy script..."
           sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no \
-            ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} -p 30022 \
-            "bash /home/mschoi/Desktop/tourismContest/String-BE/deploy.sh"
+            ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} -p 30022 << 'EOF'
+            set -e
+            BASE_DIR=/home/mschoi/Desktop/tourismContest/Yaguhang-RE/crawling-service
+            cd $BASE_DIR
+
+            # 현재 구동 중인 스택 감지
+            if docker ps --filter "name=crawler-blue" --format "{{.Names}}" | grep -q crawler-blue; then
+              CURRENT=blue; TARGET=green
+            else
+              CURRENT=green; TARGET=blue
+            fi
+
+            echo "Switching from $CURRENT to $TARGET …"
+
+            # 새 스택 배포
+            docker-compose -f docker-compose.$TARGET.yml pull
+            docker-compose -f docker-compose.$TARGET.yml up -d
+
+            # 프록시(Nginx) 전환: upstream 블록의 컨테이너 이름만 토글
+            docker-compose -f docker-compose.proxy.yml exec proxy \
+              sed -i "s|server crawler-$CURRENT:8443;|server crawler-$TARGET:8443;|g" \
+                /etc/nginx/sites-available/default
+            docker-compose -f docker-compose.proxy.yml exec proxy nginx -s reload
+
+            # 이전 스택 정리
+            docker-compose -f docker-compose.$CURRENT.yml down
+
+            echo "✅ Crawling-Service deployed as $TARGET"
+            EOF
 
       - name: Show latest backend logs
         run: |
           sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no \
             ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} -p 30022 \
-            "tail -n 100 /home/mschoi/Desktop/tourismContest/String-BE/logs/app_*.log"
+            "tail -n 100 /home/mschoi/Desktop/tourismContest/Yaguhang-RE/crawling-service/logs/app_*.log"
 
-      - name: Clean up unused Docker images (optional)
+      - name: Clean up unused Docker images
         run: docker image prune -f
