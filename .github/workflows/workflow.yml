@@ -33,11 +33,12 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build --no-daemon
 
-      - name: Copy JAR to server
+      - name: Copy JAR file to target directory
         run: |
-          sshpass -p "${{ secrets.SSH_PASSWORD }}" scp -P 30022 \
-            build/libs/*.jar \
-            ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:/home/mschoi/Desktop/tourismContest/Yaguhang-RE/crawling-service/app.jar
+          if [ -f /home/mschoi/Desktop/tourismContest/Yaguhang-RE/crawling-service/app.jar ]; then
+            rm /home/mschoi/Desktop/tourismContest/String-BE/app.jar
+          fi
+          cp build/libs/$(ls build/libs | grep '\.jar$') /home/mschoi/Desktop/tourismContest/Yaguhang-RE/crawling-service/app.jar
 
       - name: Run Blue–Green deploy script on server
         run: |
