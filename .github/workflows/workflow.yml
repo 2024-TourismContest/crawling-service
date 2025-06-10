@@ -5,7 +5,6 @@ on:
     branches: [ main ]
 
 jobs:
-  # 1. 빌드 및 이미지 푸시 작업
   build-and-push:
     name: Build and Push to Docker Hub
     runs-on: self-hosted
@@ -19,6 +18,16 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Grant execute permission to gradlew
         run: chmod +x ./gradlew
@@ -38,13 +47,13 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          # 태그를 2개(latest, 커밋해시)로 지정하여 푸시
           tags: |
             mschoi6641/crawling-service:latest
             mschoi6641/crawling-service:${{ github.sha }}
           network: host
+          cache-from: type=registry,ref=mschoi6641/crawling-service:latest
+          cache-to: type=inline
 
-  # 2. 배포 작업
   deploy:
     name: Deploy to Server
     needs: build-and-push
