@@ -1,8 +1,7 @@
-# 1) 베이스 이미지를 Alpine Linux 기반의 OpenJDK 17로 변경
-FROM openjdk:17-jre-alpine
+# 1) 베이스 이미지를 Eclipse Temurin으로 변경
+FROM eclipse-temurin:17-jre-alpine
 
 # 2) 필수 패키지 설치 (apk 사용)
-# Alpine의 패키지 매니저인 apk를 사용하고, 패키지 이름도 Alpine 용으로 변경
 RUN apk update && apk add --no-cache \
     wget \
     unzip \
