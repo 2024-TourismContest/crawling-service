@@ -29,6 +29,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Copy external config files
+        run: |
+          echo "Copying configuration files..."
+          cp /home/mschoi/Desktop/tourismContest/Yaguhang-RE/crawling-service/env/*.* ./src/main/resources/
+
       - name: Grant execute permission to gradlew
         run: chmod +x ./gradlew
 
@@ -58,7 +63,6 @@ jobs:
     name: Deploy to Server
     needs: build-and-push
     runs-on: self-hosted
-
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
