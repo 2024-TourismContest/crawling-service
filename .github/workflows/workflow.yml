@@ -34,7 +34,7 @@ jobs:
           echo "Ensuring destination directory exists..."
           mkdir -p ./src/main/resources
           echo "Copying configuration files..."
-          cp /home/mschoi/Desktop/tourismContest/Yaguhang-RE/crawling-service/env/* ./src/main/resources/
+          cp /home/mschoi/Desktop/tourismContest/Yaguhang-RE/crawling-service/env/application.yml ./src/main/resources/application.yml
 
       - name: Grant execute permission to gradlew
         run: chmod +x ./gradlew
