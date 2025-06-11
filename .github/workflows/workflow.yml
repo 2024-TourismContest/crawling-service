@@ -42,9 +42,9 @@ jobs:
       - name: Copy external config files
         run: |
           echo "Ensuring destination directory exists..."
-          sudo mkdir -p ./src/main/resources
+          mkdir -p ./src/main/resources
           echo "Copying configuration files..."
-          sudo cp /home/mschoi/Desktop/tourismContest/Yaguhang-RE/crawling-service/env/* ./src/main/resources/
+          cp /home/mschoi/Desktop/tourismContest/Yaguhang-RE/crawling-service/env/* ./src/main/resources/
 
       - name: Debug after copy
         run: |
