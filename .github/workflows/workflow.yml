@@ -32,12 +32,24 @@ jobs:
       - name: Print current working directory
         run: pwd
 
+      - name: Debug before copy
+        run: |
+          echo "--- Current directory (pwd) ---"
+          pwd
+          echo "--- Listing 'src' directory content BEFORE copy ---"
+          ls -lR ./src
+
       - name: Copy external config files
         run: |
-            echo "Ensuring destination directory exists..."
-            sudo mkdir -p ./src/main/resources
-            echo "Copying configuration files..."
-            sudo cp /home/mschoi/Desktop/tourismContest/Yaguhang-RE/crawling-service/env/application.yml ./src/main/resources/application.yml
+          echo "Ensuring destination directory exists..."
+          sudo mkdir -p ./src/main/resources
+          echo "Copying configuration files..."
+          sudo cp /home/mschoi/Desktop/tourismContest/Yaguhang-RE/crawling-service/env/* ./src/main/resources/
+
+      - name: Debug after copy
+        run: |
+          echo "--- Listing 'src' directory content AFTER copy ---"
+          ls -lR ./src
 
       - name: Grant execute permission to gradlew
         run: chmod +x ./gradlew
