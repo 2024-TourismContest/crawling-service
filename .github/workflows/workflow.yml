@@ -29,6 +29,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Print current working directory
+        run: pwd
+
       - name: Copy external config files
         run: |
           echo "Ensuring destination directory exists..."
