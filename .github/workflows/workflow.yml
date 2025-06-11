@@ -31,8 +31,10 @@ jobs:
 
       - name: Copy external config files
         run: |
+          echo "Ensuring destination directory exists..."
+          mkdir -p ./src/main/resources
           echo "Copying configuration files..."
-          cp /home/mschoi/Desktop/tourismContest/Yaguhang-RE/crawling-service/env/*.* ./src/main/resources/
+          cp /home/mschoi/Desktop/tourismContest/Yaguhang-RE/crawling-service/env/* ./src/main/resources/
 
       - name: Grant execute permission to gradlew
         run: chmod +x ./gradlew
